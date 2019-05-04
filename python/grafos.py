@@ -1,48 +1,64 @@
 grafos = [[], [[], []]]
 
 caminhosVerificados = []
-menorTamanho = 0
+menorTamanho = -1
 caminhosVálidos = []
 
-def recursão(start, end, tamanho, caminho, index, zera):
-    global caminhosVerificados
+# def recursão(start, end, tamanho, caminho, index, zera):
+#     global caminhosVerificados
+#     global menorTamanho
+#     global caminhosVálidos
+#     Lcaminho = caminho
+#     Ltamanho = tamanho
+#     Lindex = index
+#     if zera:
+#         Lindex = 0
+#     n = grafos[0].index(start)
+#     if n==len(grafos[1][0]) or end==start or Lindex>=len(grafos[1][0][n]):
+#         if not end==start:
+#             return [Lcaminho[:-1], False]
+#         if Lcaminho in caminhosVerificados:
+#             return [Lcaminho[:-1], False]
+#         if Ltamanho<menorTamanho or menorTamanho==0:
+#             caminhosVálidos = [Lcaminho]
+#             menorTamanho = Ltamanho
+#         elif Ltamanho==menorTamanho:
+#             caminhosVálidos.append(Lcaminho)
+#         caminhosVerificados.append(Lcaminho)
+#         return [Lcaminho, True]
+#     now = grafos[1][0][n][Lindex]
+#     Lcaminho += now
+#     Ltamanho += grafos[1][1][n][Lindex]
+#     caminho2 = recursão(now, end, Ltamanho, Lcaminho, Lindex, True)
+#     Lindex += 1
+#     while (not caminho2[1]) and Lindex<len(grafos[1][0][n]):
+#         Ltamanho -= grafos[1][1][n][Lindex-1]
+#         caminho2 = recursão(start, end, Ltamanho, Lcaminho[:-1], Lindex, False)
+#         Lindex += 1
+#     return caminho2
+
+# def menorCaminho(start, end):
+#     for i in range(0, len(grafos[1][0])):
+#         for i2 in range(0, len(grafos[1][0][i])):
+#             recursão(start, end, 0, start, 0, False)
+#             print("-"*50)
+
+def menorCaminho(start, end, distancia, caminho):
     global menorTamanho
     global caminhosVálidos
-    Lcaminho = caminho
-    Ltamanho = tamanho
-    Lindex = index
-    if zera:
-        Lindex = 0
-    n = grafos[0].index(start)
-    if n==len(grafos[1][0]) or end==start or Lindex>=len(grafos[1][0][n]):
-        if not end==start:
-            return [Lcaminho[:-1], False]
-        if Lcaminho in caminhosVerificados:
-            return [Lcaminho[:-1], False]
-        if Ltamanho<menorTamanho or menorTamanho==0:
-            caminhosVálidos = [Lcaminho]
-            menorTamanho = Ltamanho
-        elif Ltamanho==menorTamanho:
-            caminhosVálidos.append(Lcaminho)
-        caminhosVerificados.append(Lcaminho)
-        return [Lcaminho, True]
-    now = grafos[1][0][n][Lindex]
-    Lcaminho += now
-    Ltamanho += grafos[1][1][n][Lindex]
-    caminho2 = recursão(now, end, Ltamanho, Lcaminho, Lindex, True)
-    Lindex += 1
-    while (not caminho2[1]) and Lindex<len(grafos[1][0][n]):
-        Ltamanho -= grafos[1][1][n][Lindex-1]
-        caminho2 = recursão(start, end, Ltamanho, Lcaminho[:-1], Lindex, False)
-        Lindex += 1
-    return caminho2
-
-def menorCaminho(start, end):
-    for i in range(0, len(grafos[1][0])):
-        for i2 in range(0, len(grafos[1][0][i])):
-            recursão(start, end, 0, start, 0, False)
-            print("-"*50)
-
+    if start==end:
+        caminhosVerificados.append(caminho)
+        if distancia < menorTamanho or menorTamanho==-1:
+            menorTamanho = distancia
+            caminhosVálidos = [caminho]
+        elif distancia==menorTamanho:
+            caminhosVálidos.append(caminho)
+    else:
+        n = grafos[0].index(start)
+        for i in range(0, len(grafos[1][0][n])):
+            LocalCaminho = caminho + grafos[1][0][n][i]
+            LocalDistância = distancia + grafos[1][1][n][i]
+            menorCaminho(grafos[1][0][n][i], end, LocalDistância, LocalCaminho)
 
 def start():
 	while True:
@@ -74,13 +90,13 @@ def start():
 			break
 	start = input("Digite o ponto de partida: ")
 	end = input("Digite o ponto objetivo: ")
-	menorCaminho(start, end)
+	menorCaminho(start, end, 0, start)
 	print("-"*50)
 	print("A menor distância percorrida é:  ", menorTamanho)
 	print("O(s) melhor(es) caminho(s) é(são) esse(s):")
-	print("-"*50)
 	for caminho in caminhosVálidos:
 		print(" "*15+caminho)
+	print("-"*50)
 		
 		
 		
