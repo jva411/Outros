@@ -1,47 +1,16 @@
+import datetime
+
+t0 = datetime.datetime.now()
+
 grafos = [[], [[], []]]
 
 caminhosVerificados = []
 menorTamanho = -1
 caminhosVálidos = []
 
-# def recursão(start, end, tamanho, caminho, index, zera):
-#     global caminhosVerificados
-#     global menorTamanho
-#     global caminhosVálidos
-#     Lcaminho = caminho
-#     Ltamanho = tamanho
-#     Lindex = index
-#     if zera:
-#         Lindex = 0
-#     n = grafos[0].index(start)
-#     if n==len(grafos[1][0]) or end==start or Lindex>=len(grafos[1][0][n]):
-#         if not end==start:
-#             return [Lcaminho[:-1], False]
-#         if Lcaminho in caminhosVerificados:
-#             return [Lcaminho[:-1], False]
-#         if Ltamanho<menorTamanho or menorTamanho==0:
-#             caminhosVálidos = [Lcaminho]
-#             menorTamanho = Ltamanho
-#         elif Ltamanho==menorTamanho:
-#             caminhosVálidos.append(Lcaminho)
-#         caminhosVerificados.append(Lcaminho)
-#         return [Lcaminho, True]
-#     now = grafos[1][0][n][Lindex]
-#     Lcaminho += now
-#     Ltamanho += grafos[1][1][n][Lindex]
-#     caminho2 = recursão(now, end, Ltamanho, Lcaminho, Lindex, True)
-#     Lindex += 1
-#     while (not caminho2[1]) and Lindex<len(grafos[1][0][n]):
-#         Ltamanho -= grafos[1][1][n][Lindex-1]
-#         caminho2 = recursão(start, end, Ltamanho, Lcaminho[:-1], Lindex, False)
-#         Lindex += 1
-#     return caminho2
 
-# def menorCaminho(start, end):
-#     for i in range(0, len(grafos[1][0])):
-#         for i2 in range(0, len(grafos[1][0][i])):
-#             recursão(start, end, 0, start, 0, False)
-#             print("-"*50)
+inputs = ['A', 'B', 5, 'S', 'A', 'C', 6, 'S', 'B', 'C', 5, 'S', 'B', 'D', 9, 'S', 'C', 'D', 8, 'N', 'A', 'D']
+index = 0
 
 def menorCaminho(start, end, distancia, caminho):
     global menorTamanho
@@ -56,15 +25,21 @@ def menorCaminho(start, end, distancia, caminho):
     else:
         n = grafos[0].index(start)
         for i in range(0, len(grafos[1][0][n])):
-            LocalCaminho = caminho + grafos[1][0][n][i]
-            LocalDistância = distancia + grafos[1][1][n][i]
-            menorCaminho(grafos[1][0][n][i], end, LocalDistância, LocalCaminho)
+            menorCaminho(grafos[1][0][n][i], end, distancia + grafos[1][1][n][i], caminho + grafos[1][0][n][i])
 
 def start():
+	global inputs
+	global index
 	while True:
-		sair = input("Digite o ponto de partida: ")
-		ate = input("Digite o ponto de chegada: ")
-		d = int(input("Digite a distancia: "))
+		# sair = input("Digite o ponto de partida: ")
+		sair = inputs[index]
+		index += 1
+		# ate = input("Digite o ponto de chegada: ")
+		ate = inputs[index]
+		index += 1
+		# d = int(input("Digite a distancia: "))
+		d = inputs[index]
+		index += 1
 		if not sair in grafos[0]:
 			grafos[0].append(sair)
 			grafos[1][0].append([ate])
@@ -81,15 +56,20 @@ def start():
 			grafos[1][0].append([])
 			grafos[1][1].append([])
 		print()
-		option = input("Deseja adicionar outro ponto? (S/N)\n").lower()
+		# option = input("Deseja adicionar outro ponto? (S/N)\n").lower()
+		option = inputs[index].lower()
+		index += 1
 		while not(option=='s' or option=='n'):
 			print("Opção inválida!")
 			print()
 			option = input("Deseja adicionar outro ponto? (S/N)\n").lower()
 		if option=='n':
-			break
-	start = input("Digite o ponto de partida: ")
-	end = input("Digite o ponto objetivo: ")
+			break 
+	start = inputs[index]
+	index += 1
+	# end = input("Digite o ponto objetivo: ")
+	end = inputs[index]
+	index += 1
 	menorCaminho(start, end, 0, start)
 	print("-"*50)
 	print("A menor distância percorrida é:  ", menorTamanho)
@@ -102,4 +82,7 @@ def start():
 		
 		
 start()
+
+t1 = datetime.datetime.now()
+print(t1-t0)
 	
