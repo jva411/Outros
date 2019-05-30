@@ -1,16 +1,56 @@
+import java.io.*;
+
 public class Teste{
+
+    private static class Endereco implements Serializable{
+        private String estado, cidade, rua;
+        private int numero;
+        public Endereco(String Estado, String Cidade, String Rua, int Numero){
+            estado = Estado;
+            cidade = Cidade;
+            rua = Rua;
+            numero = Numero;
+        }
+    }
+
+    private static class Pessoa implements Serializable{
+        private String nome;
+        private int idade;
+        private Endereco endereco;
+        public Pessoa(String Nome, int Idade, Endereco Endereco){
+            nome = Nome;
+            idade = Idade;
+            endereco = Endereco;
+        }
+    }
 
     public static void main(String[] args){
 
-        String[] ips = new String[]{"127.0.0.1:8000", "127.0.0.1", "47/  5.  07 3 -   256  _ 73  : 8  75  3",
-                                    "127_0-0.1:8000", "9 8509 7224", "meuip.hostfudida.gratis:666"};
+        Pessoa p = new Pessoa("Gustavo", 18, new Endereco("Ceará", "Fortaleza", "573", 175));
+        toByte(p, System.out);
+    }
 
-        String regex2 = "((.*[\\d\\w]+.*)+[\\._\\-/]+)+[\\d\\w]*.*:*[.*[\\d\\w]*.*]*";
-
-        for(String ip:ips){
-            System.out.println(ip+"\n"+ip.matches(regex2));
+    public static void toByte(Object obj, OutputStream os){
+        try{
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            oos.writeObject(obj);
+            oos.flush();
+            oos.close();
+        }catch(IOException ex){
+            ex.printStackTrace();
         }
-        
+    }
+
+    public static Pessoa fromByte(InputStream is){
+        try{
+            ObjectInputStream ois = new ObjectInputStream(is);
+            Pessoa p = (Pessoa)ois.readObject();
+            ois.close();
+            return p;
+        }catch(IOException ex){
+            ex.printStackTrace();
+            return null;
+        }
     }
 
 }
