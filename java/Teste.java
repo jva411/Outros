@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 import java.lang.StringBuilder;
 
 public class Teste{
@@ -36,9 +37,12 @@ public class Teste{
         Pessoa p = new Pessoa("Gustavo", 18, new Endereco("Ceará", "Fortaleza", "573", 175));
         File file = new File("asd.txt");
         if(!file.exists()) file.createNewFile();
-        toByte(p, new FileOutputStream(file));
-        p = fromByte(new FileInputStream(file));
-        System.out.println(p.toString());
+        ArrayList<Pessoa> pessoas = new ArrayList<>();
+        pessoas.add(p);
+        for(int i=0;i<50;i++) pessoas.add(new Pessoa("Fodase"+i, i, new Endereco("Fortaleza", "Motel Até Q' Fim", "347", 69)));
+        toByte(pessoas, new FileOutputStream(file));
+        pessoas = fromByte(new FileInputStream(file));
+        for(Pessoa P:pessoas) System.out.println(P.toString());
     }
 
     public static void toByte(Object obj, OutputStream os){
@@ -53,10 +57,10 @@ public class Teste{
         }
     }
 
-    public static Pessoa fromByte(InputStream is){
+    public static ArrayList<Pessoa> fromByte(InputStream is){
         try{
             ObjectInputStream ois = new ObjectInputStream(is);
-            Pessoa p = (Pessoa)ois.readObject();
+            ArrayList<Pessoa> p = (ArrayList<Pessoa>)ois.readObject();
             ois.close();
             return p;
         }catch(IOException | ClassNotFoundException ex){
